@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kisan Mitra — Revolutionizing Agriculture & Rural Livelihoods</title>
+  <meta name="description" content="Kisan Mitra static demo showcasing all features and user types without login or backend." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0b1020;
+      --bg-elev: #121938;
+      --primary: #58d68d;   /* leaf green */
+      --primary-2: #18a979; /* darker green */
+      --accent: #42a5f5;    /* sky */
+      --warn: #f5a142;      /* amber */
+      --pink: #ff72b6;
+      --text: #eaf2ff;
+      --muted: #a8b3cf;
+      --card: #0e1530;
+      --card-2: #0c142b;
+      --border: #253255;
+      --good: #62e47b;
+      --bad: #ff708d;
+      --shadow: 0 10px 30px rgba(0,0,0,.35), 0 2px 10px rgba(0,0,0,.2);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1200px 700px at 70% -100px, rgba(72,190,255,.15), transparent), radial-gradient(1000px 600px at -20% 20%, rgba(104,255,180,.12), transparent), var(--bg);color:var(--text);}
+    a{color:var(--accent);text-decoration:none}
+    header{position:sticky;top:0;z-index:50;background:rgba(11,16,32,.7);backdrop-filter: blur(8px);border-bottom:1px solid var(--border)}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand .logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;box-shadow: var(--shadow)}
+    .brand .logo svg{filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+    .brand-title{font-family:Montserrat,Inter,sans-serif;font-weight:800;letter-spacing:.3px}
+    .pill{background:rgba(255,255,255,.06);border:1px solid var(--border);padding:8px 12px;border-radius:999px;color:var(--muted);font-size:13px}
+
+    /* hero */
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;padding:48px 0}
+    .hero h1{font-family:Montserrat,Inter,sans-serif;font-weight:800;font-size:clamp(28px,5vw,48px);line-height:1.08;margin:0}
+    .hero p{color:var(--muted);font-size:16px}
+    .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+    .btn{border:1px solid var(--border);background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));padding:12px 16px;border-radius:12px;color:var(--text);cursor:pointer;font-weight:600;transition:.2s;}
+    .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg, var(--primary), var(--primary-2));border-color:transparent;color:#06140c}
+
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));border:1px solid var(--border);padding:18px;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .toggles{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:8px}
+    .toggle{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;padding:12px;border:1px solid var(--border);border-radius:14px;background:var(--card-2);cursor:pointer;transition:.15s}
+    .toggle[aria-pressed="true"], .toggle:hover{border-color:var(--primary);box-shadow:0 0 0 3px rgba(88,214,141,.2)}
+    .toggle span{font-size:12px;color:var(--muted)}
+
+    .quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+    .mini{border:1px solid var(--border);background:var(--card);padding:12px;border-radius:14px}
+    .mini strong{display:block;font-size:18px}
+    .mini small{color:var(--muted)}
+
+    /* main */
+    main{padding:8px 0 40px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:16px}
+    .tab-btn{padding:10px 14px;background:transparent;border:1px solid var(--border);border-radius:999px;color:var(--muted);cursor:pointer}
+    .tab-btn[aria-selected="true"]{background:linear-gradient(135deg, rgba(88,214,141,.2), rgba(66,165,245,.2));color:var(--text);border-color:transparent}
+
+    .section{display:none}
+    .section.active{display:block}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media (max-width: 980px){
+      .hero{grid-template-columns:1fr;}
+      .toggles{grid-template-columns:repeat(3,1fr)}
+      .grid{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 640px){
+      .toggles{grid-template-columns:repeat(2,1fr)}
+      .grid{grid-template-columns:1fr}
+    }
+
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+    .card h3{margin:0 0 6px;font-size:18px}
+    .card p{margin:0 0 12px;color:var(--muted)}
+    .card .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{display:inline-flex;align-items:center;gap:6px; padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width: 860px){.two-col{grid-template-columns:1fr}}
+
+    input, select, textarea{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:#0a1229;color:var(--text)}
+    label{font-size:13px;color:var(--muted)}
+    .kpi{display:flex;gap:10px;align-items:center}
+    .kpi b{font-size:22px}
+
+    /* modal */
+    dialog{border:none;border-radius:16px;background:linear-gradient(180deg, #111a38, #0b1229);color:var(--text);box-shadow:var(--shadow);width:min(680px,92vw)}
+    dialog::backdrop{background:rgba(0,0,0,.55)}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:10px}
+
+    footer{border-top:1px solid var(--border);padding:24px 0;color:var(--muted)}
+    .flowchart{white-space:pre-wrap;background:#091025;border:1px dashed var(--border);border-radius:12px;padding:12px;color:#b7c7ff;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-size:12px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 14c4-1 6-5 8-10 2 5 4 9 8 10-3 3-6 5-8 6-2-1-5-3-8-6z" fill="#052e1c"/>
+            <path d="M4 14c4-1 6-5 8-10 0 6-2 12-8 10z" fill="#a6f1c7"/>
+            <path d="M12 4c2 5 4 9 8 10-6 2-8-4-8-10z" fill="#7be3aa"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">Kisan Mitra</div>
+          <div class="pill">Static demo • No login required</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <a class="pill" href="#home">Home</a>
+        <a class="pill" href="#diagnosis">Diagnosis</a>
+        <a class="pill" href="#features">Features</a>
+        <a class="pill" href="#community">Community</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="container hero" id="home">
+    <div>
+      <h1>Kisan Mitra: <span style="background:linear-gradient(90deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent">Revolutionizing Agriculture & Rural Livelihoods</span></h1>
+      <p>Experience every feature of the original Firebase app in a single, elegant static site. Toggle user types, explore tools, and preview flows — all without logging in.</p>
+      <div class="cta-row">
+        <button class="btn primary" onclick="scrollToId('diagnosis')">Try Pest & Disease Diagnosis</button>
+        <button class="btn" onclick="scrollToId('features')">Explore All Features</button>
+        <button class="btn" onclick="document.getElementById('flowDialog').showModal()">See App Flowchart</button>
+      </div>
+      <div class="quick-stats">
+        <div class="mini"><strong id="statUsers">4</strong><small>User Types</small></div>
+        <div class="mini"><strong>30+</strong><small>Features & Tools</small></div>
+        <div class="mini"><strong>100%</strong><small>Static • GitHub Ready</small></div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="pill" style="display:inline-flex;gap:8px;align-items:center"><span>Choose user type</span></div>
+      <div class="toggles" role="group" aria-label="User type toggles">
+        <button class="toggle" data-user="farmer" aria-pressed="true" onclick="setUserType('farmer')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2c1.4 0 2.5 1.1 2.5 2.5S13.4 7 12 7s-2.5-1.1-2.5-2.5S10.6 2 12 2z" fill="#a6f1c7"/><path d="M5 21c.6-4.3 3.1-6.5 7-6.5s6.4 2.2 7 6.5H5z" fill="#7be3aa"/></svg>
+          <strong>Farmer</strong>
+          <span>Default</span>
+        </button>
+        <button class="toggle" data-user="buyer" onclick="setUserType('buyer')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 7h13l-1.5 8.5a2 2 0 0 1-2 1.6H9.8a2 2 0 0 1-2-1.5L6 4H3" stroke="#a6f1c7" stroke-width="2"/></svg>
+          <strong>Buyer</strong>
+          <span>Markets</span>
+        </button>
+        <button class="toggle" data-user="service" onclick="setUserType('service')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="#a6f1c7" stroke-width="2"/><circle cx="7" cy="12" r="3" fill="#7be3aa"/><circle cx="17" cy="12" r="3" fill="#42a5f5"/></svg>
+          <strong>Service</strong>
+          <span>Drone/Equip</span>
+        </button>
+        <button class="toggle" data-user="entrepreneur" onclick="setUserType('entrepreneur')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20V8l8-4 8 4v12" stroke="#a6f1c7" stroke-width="2"/><path d="M8 14h8v6H8z" fill="#7be3aa"/></svg>
+          <strong>Entrepreneur</strong>
+          <span>FPO/Co-op</span>
+        </button>
+        <button class="toggle" data-user="ngo" onclick="setUserType('ngo')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l9 5-9 5-9-5 9-5zm0 10l9 5-9 5-9-5 9-5z" fill="#a6f1c7"/></svg>
+          <strong>Govt/NGO</strong>
+          <span>Programs</span>
+        </button>
+      </div>
+      <div class="mini" style="margin-top:12px">
+        <small>Tip: The demo adapts to your selection (default: Farmer). Tabs, defaults & sample data will match the chosen perspective.</small>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- Diagnosis: Primary Tool -->
+    <section id="diagnosis" class="section active">
+      <div class="tabs" role="tablist">
+        <button class="tab-btn" role="tab" aria-selected="true" data-tab="diag">Pest & Disease Diagnosis</button>
+        <button class="tab-btn" role="tab" data-tab="timeline">Visual Crop Timeline</button>
+        <button class="tab-btn" role="tab" data-tab="mapping">Farm Boundary Mapping</button>
+      </div>
+
+      <div id="tab-diag" class="card" role="tabpanel">
+        <h3>AI-Powered Pest & Disease Diagnosis</h3>
+        <p>Upload a photo (or pick a sample) and get instant guidance. Works offline here with <em>on-page demo data</em>.</p>
+        <div class="two-col">
+          <div class="card">
+            <label>Choose crop</label>
+            <select id="cropSelect">
+              <option>Wheat</option>
+              <option>Rice</option>
+              <option>Tomato</option>
+              <option>Cotton</option>
+              <option>Maize</option>
+            </select>
+            <label style="margin-top:8px">Upload leaf/fruit photo (optional)</label>
+            <input type="file" accept="image/*" />
+            <div class="actions" style="margin-top:10px">
+              <button class="btn primary" onclick="runDiagnosis()">Run Diagnosis</button>
+              <button class="btn" onclick="sampleDiagnosis()">Use Sample</button>
+            </div>
+          </div>
+          <div class="card" id="diagResult">
+            <div class="kpi"><b>—</b><span style="color:var(--muted)">No analysis yet. Run the tool to preview results.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-timeline" class="card" role="tabpanel" hidden>
+        <h3>Visual Crop Timeline</h3>
+        <p>Track crop growth with photos and notes. (Static demo — data saved to your browser only.)</p>
+        <div class="two-col">
+          <div class="card">
+            <label>Date</label>
+            <input id="tlDate" type="date" />
+            <label style="margin-top:8px">Note</label>
+            <textarea id="tlNote" rows="3" placeholder="Seeded field 2, ridge spacing 30cm ..."></textarea>
+            <div class="actions" style="margin-top:10px">
+              <button class="btn primary" onclick="addTimeline()">Add Entry</button>
+              <button class="btn" onclick="resetTimeline()">Reset</button>
+            </div>
+          </div>
+          <div class="card">
+            <div id="timelineList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-mapping" class="card" role="tabpanel" hidden>
+        <h3>Farm Boundary Mapping</h3>
+        <p>Digitally mark land boundaries. (Static sandbox with area calculation.)</p>
+        <div class="two-col">
+          <div class="card">
+            <label>Enter GPS coordinates (lat,lon per line)</label>
+            <textarea id="coords" rows="6" placeholder="12.913,77.594
+12.914,77.596
+12.912,77.597"></textarea>
+            <div class="actions" style="margin-top:10px">
+              <button class="btn primary" onclick="calcArea()">Calculate Area</button>
+              <button class="btn" onclick="sampleCoords()">Sample</button>
+            </div>
+          </div>
+          <div class="card" id="areaOut">Enter coordinates to compute area in hectares.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="section">
+      <div class="tabs" role="tablist">
+        <button class="tab-btn" role="tab" aria-selected="true" data-tab="fi">pestaña 1: Farm Intelligence & Planning</button>
+        <button class="tab-btn" role="tab" data-tab="market">pestaña 2: Marketplace & Services</button>
+        <button class="tab-btn" role="tab" data-tab="community">pestaña 3: Community & Knowledge</button>
+      </div>
+
+      <!-- Farm Intelligence -->
+      <div id="tab-fi" role="tabpanel">
+        <div class="grid">
+          <div class="card">
+            <h3>Hyperlocal Weather</h3>
+            <p>Forecast snapshot based on your location (mocked).</p>
+            <div class="kpi"><b id="wxTemp">34°C</b><span>Clear • Wind 8 km/h</span></div>
+            <div class="actions"><button class="btn" onclick="randomWeather()">Refresh</button></div>
+          </div>
+          <div class="card">
+            <h3>Mandi Prices</h3>
+            <p>Real-time crop prices (demo list).</p>
+            <div id="mandiList"></div>
+            <div class="actions"><button class="btn" onclick="shuffleMandi()">Shuffle</button></div>
+          </div>
+          <div class="card">
+            <h3>Smart Crop Advisory</h3>
+            <p>Personalized crop calendar.</p>
+            <label>Select crop</label>
+            <select id="advisoryCrop"><option>Tomato</option><option>Groundnut</option><option>Paddy</option><option>Cotton</option></select>
+            <div class="actions"><button class="btn primary" onclick="showAdvisory()">View Calendar</button></div>
+          </div>
+          <div class="card">
+            <h3>Soil Health Card</h3>
+            <p>AI-driven soil analysis (mock input).</p>
+            <div class="two-col">
+              <div>
+                <label>N (kg/ha)</label><input id="nVal" type="number" value="120"/>
+                <label>P (kg/ha)</label><input id="pVal" type="number" value="40"/>
+                <label>K (kg/ha)</label><input id="kVal" type="number" value="60"/>
+              </div>
+              <div>
+                <label>pH</label><input id="phVal" type="number" value="6.8" step="0.1"/>
+                <label>Organic Carbon %</label><input id="ocVal" type="number" value="0.8" step="0.1"/>
+                <label>Texture</label><select id="txVal"><option>Loam</option><option>Clay</option><option>Sandy</option></select>
+              </div>
+            </div>
+            <div class="actions"><button class="btn primary" onclick="soilReport()">Generate Report</button></div>
+          </div>
+          <div class="card">
+            <h3>Crop Planner</h3>
+            <p>Plan season for max profit.</p>
+            <label>Land (acre)</label><input id="landAcre" type="number" value="2"/>
+            <label>Target Crop</label><select id="planCrop"><option>Tomato</option><option>Onion</option><option>Tur</option><option>Wheat</option></select>
+            <div class="actions"><button class="btn primary" onclick="planSeason()">Plan</button></div>
+          </div>
+          <div class="card">
+            <h3>Agroforestry Suggestions</h3>
+            <p>Integrate trees with crops.</p>
+            <div class="actions"><button class="btn" onclick="simpleMsg('Suitable alley cropping with Gliricidia and neem along boundaries. Spacing 5m x 5m; intercrop: pigeon pea.')">Suggest</button></div>
+          </div>
+          <div class="card">
+            <h3>Irrigation Scheduler</h3>
+            <p>Calculate daily water needs.</p>
+            <div class="two-col">
+              <div>
+                <label>ET<sub>0</sub> (mm/day)</label><input id="eto" type="number" value="5.2" step="0.1"/>
+                <label>Crop Coef (Kc)</label><input id="kc" type="number" value="0.85" step="0.05"/>
+              </div>
+              <div>
+                <label>Area (acre)</label><input id="areaAcre" type="number" value="2" step="0.1"/>
+                <label>System Eff. (%)</label><input id="eff" type="number" value="85"/>
+              </div>
+            </div>
+            <div class="actions"><button class="btn primary" onclick="calcIrrigation()">Compute</button></div>
+          </div>
+          <div class="card">
+            <h3>Cost & Profit Calculator</h3>
+            <p>Estimate costs and profit.</p>
+            <div class="two-col">
+              <div>
+                <label>Inputs Cost (₹)</label><input id="costIn" type="number" value="35000"/>
+                <label>Labor Cost (₹)</label><input id="costLab" type="number" value="18000"/>
+              </div>
+              <div>
+                <label>Expected Yield (qtl)</label><input id="yieldQ" type="number" value="80"/>
+                <label>Price (₹/qtl)</label><input id="priceQ" type="number" value="2200"/>
+              </div>
+            </div>
+            <div class="actions"><button class="btn primary" onclick="calcProfit()">Calculate</button></div>
+          </div>
+          <div class="card">
+            <h3>Solar Panel Planning</h3>
+            <p>Calculate ROI for solar pumps.</p>
+            <div class="two-col">
+              <div>
+                <label>System Cost (₹)</label><input id="solarCost" type="number" value="250000"/>
+                <label>Subsidy (%)</label><input id="solarSub" type="number" value="30"/>
+              </div>
+              <div>
+                <label>Monthly Savings (₹)</label><input id="solarSave" type="number" value="3500"/>
+                <label>OM cost (₹/yr)</label><input id="solarOM" type="number" value="3000"/>
+              </div>
+            </div>
+            <div class="actions"><button class="btn primary" onclick="solarROI()">Compute ROI</button></div>
+          </div>
+          <div class="card">
+            <h3>KisanBot — AI Assistant</h3>
+            <p>Ask anything about your farm.</p>
+            <input id="botQ" placeholder="e.g., Best time to apply urea for paddy?" />
+            <div class="actions"><button class="btn primary" onclick="kisanBot()">Ask</button></div>
+          </div>
+          <div class="card">
+            <h3>Livestock Health Tracker</h3>
+            <p>Manage cattle vaccinations & meds.</p>
+            <label>Animal ID</label><input id="cowId" placeholder="KA-07-001" />
+            <label>Vaccine</label><input id="vax" placeholder="FMD" />
+            <div class="actions"><button class="btn" onclick="addVax()">Add Record</button></div>
+            <div id="vaxList" style="margin-top:8px;color:var(--muted)">No records yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marketplace -->
+      <div id="tab-market" role="tabpanel" hidden>
+        <div class="grid">
+          <div class="card">
+            <h3>Equipment Sharing</h3>
+            <p>Rent nearby tractors, tillers, harvesters.</p>
+            <label>Filter by type</label>
+            <select id="equipFilter"><option>All</option><option>Tractor</option><option>Tiller</option><option>Harvester</option><option>Sprayer</option></select>
+            <div class="actions"><button class="btn" onclick="listEquip()">Search</button></div>
+            <div id="equipList" style="margin-top:8px"></div>
+          </div>
+          <div class="card">
+            <h3>Direct Marketplace</h3>
+            <p>Sell produce directly to buyers.</p>
+            <div id="marketList"></div>
+            <div class="actions"><button class="btn" onclick="seedMarket()">Load Samples</button></div>
+          </div>
+          <div class="card">
+            <h3>Drone Service Booking</h3>
+            <p>Spraying • Seeding • Mapping</p>
+            <label>Service</label><select id="droneSvc"><option>Spraying</option><option>Seeding</option><option>Mapping</option></select>
+            <label>Area (acre)</label><input id="droneArea" type="number" value="3"/>
+            <div class="actions"><button class="btn primary" onclick="bookDrone()">Get Quote</button></div>
+          </div>
+          <div class="card">
+            <h3>Farm Employment Exchange</h3>
+            <p>Post & find local jobs.</p>
+            <label>Role</label><input id="jobRole" placeholder="Tractor Operator"/>
+            <label>Wage (₹/day)</label><input id="jobWage" type="number" value="600"/>
+            <div class="actions"><button class="btn" onclick="postJob()">Post</button></div>
+            <div id="jobBoard" style="margin-top:8px"></div>
+          </div>
+          <div class="card">
+            <h3>Agri Box Subscription</h3>
+            <p>Monthly kits matched to your crop.</p>
+            <label>Crop</label><select id="boxCrop"><option>Tomato</option><option>Chilli</option><option>Paddy</option></select>
+            <div class="actions"><button class="btn" onclick="showBox()">See Kit</button></div>
+          </div>
+          <div class="card">
+            <h3>Bulk Input Buying Clubs</h3>
+            <p>Team up to buy fertilizers, seeds, & chemicals at lower price.</p>
+            <label>Members</label><input id="clubMembers" type="number" value="12"/>
+            <label>Retail Price (₹)</label><input id="clubPrice" type="number" value="1200"/>
+            <div class="actions"><button class="btn primary" onclick="clubSavings()">Estimate Savings</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Community -->
+      <div id="tab-community" role="tabpanel" hidden>
+        <div class="grid">
+          <div class="card">
+            <h3>Agri-Loan Facilitator</h3>
+            <p>Check loan & insurance eligibility.</p>
+            <label>Annual Income (₹)</label><input id="loanIncome" type="number" value="300000"/>
+            <label>Land Size (acre)</label><input id="loanLand" type="number" value="2"/>
+            <label>Credit Score (est.)</label><input id="loanScore" type="number" value="680"/>
+            <div class="actions"><button class="btn primary" onclick="loanCheck()">Check</button></div>
+          </div>
+          <div class="card">
+            <h3>Community Forums</h3>
+            <p>Collaborate with other farmers.</p>
+            <input id="forumMsg" placeholder="Share an update or ask a question" />
+            <div class="actions"><button class="btn" onclick="postForum()">Post</button></div>
+            <div id="forumList" style="margin-top:8px"></div>
+          </div>
+          <div class="card">
+            <h3>Micro-Courses</h3>
+            <p>Learn new techniques in 5–10 minutes.</p>
+            <ul id="courseList" style="margin:0;padding-left:18px"></ul>
+          </div>
+          <div class="card">
+            <h3>Farmer Podcasts & Radio</h3>
+            <p>Offline-friendly audio shows & interviews (transcripts here).</p>
+            <div id="podList"></div>
+          </div>
+          <div class="card">
+            <h3>Cooperative Formation Tools</h3>
+            <p>Guidance to form FPOs — checklist & sample bylaws.</p>
+            <div class="actions"><button class="btn" onclick="showFPO()">Open Checklist</button></div>
+          </div>
+          <div class="card">
+            <h3>Agri Health Tracker</h3>
+            <p>Log chemical exposure & get safety advice.</p>
+            <label>Chemical</label><input id="chem" placeholder="Glyphosate"/>
+            <label>Exposure (hrs)</label><input id="hrs" type="number" value="2"/>
+            <div class="actions"><button class="btn primary" onclick="healthAdvice()">Get Advice</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flowchart Modal -->
+    <dialog id="flowDialog">
+      <div class="modal-head">
+        <strong>App Flowchart</strong>
+        <button class="btn" onclick="this.closest('dialog').close()">Close</button>
+      </div>
+      <div class="flowchart">Kisan Sampark App (Homepage)
+│
+└─── Pest & Disease Diagnosis (Primary Tool)
+│
+└─── Main Features (Organized in Tabs)
+     │
+     ├───  pestaña 1: Farm Intelligence & Planning
+     │    │
+     │    ├── Weather Forecast ─────> Hyperlocal weather updates.
+     │    ├── Mandi Prices ─────────> Real-time crop prices.
+     │    ├── Smart Crop Advisory ──> Personalized crop calendars.
+     │    ├── Soil Health Card ─────> AI-driven soil analysis.
+     │    ├── Crop Planner ─────────> Plan season for max profit.
+     │    ├── Agroforestry Suggestions > Integrate trees with crops.
+     │    ├── Irrigation Scheduler ─> Calculate daily water needs.
+     │    ├── Cost & Profit Calculator > Estimate costs and profit.
+     │    ├── Solar Panel Planning ─> Calculate ROI for solar.
+     │    ├── AI-Powered Assistant ──> Personal farming assistant (KisanBot).
+     │    ├── Visual Crop Timeline ─> Track crop growth with photos.
+     │    ├── Farm Boundary Mapping──> Digitally mark land boundaries.
+     │    └── Livestock Health Tracker > Manage records for cattle.
+     │
+     ├─── pestaña 2: Marketplace & Services
+     │    │
+     │    ├── Equipment Sharing ────> Rent farm equipment nearby.
+     │    ├── Direct Marketplace ───> Sell produce directly to buyers.
+     │    ├── Drone Service Booking──> For spraying, seeding, and mapping.
+     │    ├── Farm Employment Exchange > Post and find local farm jobs.
+     │    ├── Agri Box Subscription──> Monthly kits for your crops.
+     │    └── Bulk Input Buying Clubs > Group together to buy supplies.
+     │
+     └─── pestaña 3: Community & Knowledge
+          │
+          ├── Agri-Loan Facilitator──> Check loan and insurance eligibility.
+          ├── Community Forums ─────> Collaborate with other farmers.
+          ├── Micro-Courses ────────> Learn new farming techniques.
+          ├── Farmer Podcasts & Radio > Offline audio shows and interviews.
+          ├── Cooperative Formation Tools > Guidance on forming FPOs.
+          └── Agri Health Tracker────> Log chemical exposure & get safety advice.
+      </div>
+    </dialog>
+
+    <!-- Generic Modal for details -->
+    <dialog id="infoDialog">
+      <div class="modal-head">
+        <strong id="infoTitle">Details</strong>
+        <button class="btn" onclick="this.closest('dialog').close()">Close</button>
+      </div>
+      <div id="infoBody" style="max-height:60vh;overflow:auto"></div>
+    </dialog>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>© <span id="year"></span> Kisan Mitra — Static Demo. Built for GitHub Pages, no backend required.</div>
+        <div class="pill">Made with ♥ for Indian agriculture</div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // ---- Utilities ----
+  const $ = (s, p=document) => p.querySelector(s);
+  const $$ = (s, p=document) => [...p.querySelectorAll(s)];
+  const formatINR = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n);
+  const km2 = x => Math.round(x*100)/100;
+
+  const state = {
+    userType: 'farmer',
+    timeline: JSON.parse(localStorage.getItem('km_timeline')||'[]'),
+    vax: JSON.parse(localStorage.getItem('km_vax')||'[]'),
+    forum: JSON.parse(localStorage.getItem('km_forum')||'[]'),
+    market: [],
+  };
+
+  function setUserType(type){
+    state.userType = type;
+    $$('.toggle').forEach(t=>t.setAttribute('aria-pressed', String(t.dataset.user===type)));
+    // Adjust defaults based on user type
+    const featureTab = type==='buyer' ? 'market' : type==='service' ? 'market' : type==='entrepreneur' ? 'community' : 'fi';
+    showSection('features');
+    activateTab(featureTab);
+    // Banner message
+    openInfo('User Profile Switched', `<p>The demo has been tailored for <b>${type.toUpperCase()}</b>.</p>
+      <ul><li>Default tab changed.</li><li>Sample data & tips adapt to this role.</li></ul>`);
+  }
+
+  function showSection(id){
+    $$('.section').forEach(s=>s.classList.remove('active'));
+    if(id==='diagnosis'){ $('#diagnosis').classList.add('active'); activateTab('diag'); }
+    else if(id==='features'){ $('#features').classList.add('active'); }
+  }
+
+  function activateTab(key){
+    // Top-level features tabs
+    $$('.tabs [data-tab]').forEach(btn=>{
+      const is = btn.dataset.tab===key;
+      btn.setAttribute('aria-selected', String(is));
+      const tp = btn.closest('.tabs').nextElementSibling;
+      // Handle diagnosis subtabs specially
+      if(btn.closest('#diagnosis')){
+        $('#tab-diag').hidden = key!=='diag';
+        $('#tab-timeline').hidden = key!=='timeline';
+        $('#tab-mapping').hidden = key!=='mapping';
+      }
+      // Handle feature subtabs
+      if(btn.closest('#features')){
+        $('#tab-fi').hidden = key!=='fi';
+        $('#tab-market').hidden = key!=='market';
+        $('#tab-community').hidden = key!=='community';
+      }
+    });
+  }
+
+  function scrollToId(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth'}) }
+
+  // ---- Diagnosis demo ----
+  const samples = {
+    Wheat: { issue:'Leaf Rust', conf: 0.86, advice:'Spray propiconazole (0.1%) if >10% leaves affected. Maintain field sanitation.' },
+    Rice: { issue:'Bacterial Leaf Blight', conf: 0.81, advice:'Avoid overhead irrigation; apply copper oxychloride 0.3% if severe.' },
+    Tomato: { issue:'Early Blight', conf: 0.88, advice:'Use chlorothalonil; rotate with mancozeb. Remove infected leaves.' },
+    Cotton: { issue:'Whitefly infestation', conf: 0.79, advice:'Release predators; use yellow sticky traps; neem oil 3%.' },
+    Maize: { issue:'Fall Armyworm', conf: 0.83, advice:'Handpick egg masses; apply spinosad if threshold exceeded.' }
+  };
+  function runDiagnosis(){
+    const crop = $('#cropSelect').value;
+    const s = samples[crop];
+    $('#diagResult').innerHTML = `<div class="kpi"><b>${s.issue}</b><span>Confidence ${(s.conf*100).toFixed(0)}%</span></div>
+    <p><b>Advice:</b> ${s.advice}</p>
+    <div class="chip">Prevention: field hygiene • crop rotation</div>`;
+  }
+  function sampleDiagnosis(){ $('#cropSelect').value='Tomato'; runDiagnosis(); }
+
+  // ---- Timeline ----
+  function renderTimeline(){
+    const box = $('#timelineList');
+    if(!state.timeline.length){ box.innerHTML = '<span style="color:var(--muted)">No entries yet.</span>'; return; }
+    box.innerHTML = state.timeline.map(e=>`<div class='mini'><strong>${e.date}</strong><br/><small>${e.note}</small></div>`).join('');
+  }
+  function addTimeline(){
+    const date = $('#tlDate').value || new Date().toISOString().slice(0,10);
+    const note = $('#tlNote').value.trim(); if(!note) return;
+    state.timeline.unshift({date, note});
+    localStorage.setItem('km_timeline', JSON.stringify(state.timeline));
+    $('#tlNote').value=''; renderTimeline();
+  }
+  function resetTimeline(){ state.timeline=[]; localStorage.removeItem('km_timeline'); renderTimeline(); }
+
+  // ---- Mapping / area ----
+  function sampleCoords(){ $('#coords').value = '12.913,77.594\n12.914,77.596\n12.912,77.597\n12.911,77.595'; }
+  function calcArea(){
+    const lines = $('#coords').value.trim().split(/\n+/).map(l=>l.split(',').map(Number));
+    if(lines.length<3){ $('#areaOut').textContent='Need at least 3 points.'; return; }
+    // Approx area using planar approximation (ok for small plots)
+    const R=6371000; // m
+    const pts = lines.map(([lat,lon])=>{
+      const x = R * lon * Math.PI/180 * Math.cos((lat*Math.PI/180));
+      const y = R * lat * Math.PI/180; return [x,y];
+    });
+    let area=0; for(let i=0;i<pts.length;i++){ const [x1,y1]=pts[i], [x2,y2]=pts[(i+1)%pts.length]; area += (x1*y2 - x2*y1); }
+    area = Math.abs(area)/2; // in m2
+    const ha = area/10000;
+    $('#areaOut').innerHTML = `<div class='kpi'><b>${ha.toFixed(2)} ha</b><span>(${km2(area/1000000)} km²)</span></div>`;
+  }
+
+  // ---- Weather & Mandi ----
+  function randomWeather(){
+    const t = 24 + Math.round(Math.random()*14);
+    const cond = ['Clear','Partly Cloudy','Showers','Windy'][Math.floor(Math.random()*4)];
+    const wind = 4 + Math.round(Math.random()*12);
+    $('#wxTemp').textContent = `${t}°C`;
+    $('#wxTemp').nextElementSibling.textContent = `${cond} • Wind ${wind} km/h`;
+  }
+  const mandiData = [
+    {crop:'Tomato', price: 1800, market:'Kolar'},
+    {crop:'Onion', price: 1400, market:'Lasalgaon'},
+    {crop:'Tur (Arhar)', price: 6200, market:'Kalaburagi'},
+    {crop:'Cotton', price: 6600, market:'Rajkot'},
+    {crop:'Wheat', price: 2500, market:'Kota'},
+  ];
+  function renderMandi(){
+    $('#mandiList').innerHTML = mandiData.map(m=>`<div class='mini'><strong>${m.crop}</strong><small>${m.market} • ${formatINR(m.price)}/qtl</small></div>`).join('');
+  }
+  function shuffleMandi(){ mandiData.sort(()=>Math.random()-0.5); renderMandi(); }
+
+  // ---- Advisory ----
+  function showAdvisory(){
+    const c = $('#advisoryCrop').value;
+    const schedule = {
+      Tomato: ['Week 1: Nursery prep','Week 3: Transplanting','Week 5: First staking','Week 7: Flowering spray','Week 10: Harvest window'],
+      Groundnut: ['Sowing: onset of monsoon','35 DAS: gypsum','45 DAS: weeding','90 DAS: harvest'],
+      Paddy: ['Nursery 20–25 days','Transplant 2–3 seedlings','Tillering: N top-dress','Panicle: K boost','Harvest @ 20–22% MC'],
+      Cotton: ['Sow with 90cm spacing','Square stage: pest scouting','Boll dev: irrigation','Defoliant before picking'],
+    }[c];
+    openInfo(`${c} Calendar`, `<ul>${schedule.map(s=>`<li>${s}</li>`).join('')}</ul>`);
+  }
+
+  // ---- Soil report ----
+  function soilReport(){
+    const n=+$('#nVal').value, p=+$('#pVal').value, k=+$('#kVal').value, ph=+$('#phVal').value, oc=+$('#ocVal').value, tx=$('#txVal').value;
+    let status = [];
+    status.push(n<100? 'N: Low' : n>180? 'N: High' : 'N: Adequate');
+    status.push(p<30? 'P: Low' : p>60? 'P: High' : 'P: Adequate');
+    status.push(k<40? 'K: Low' : k>80? 'K: High' : 'K: Adequate');
+    status.push(ph<6.2? 'pH slightly acidic' : ph>7.5? 'pH alkaline' : 'pH optimal');
+    status.push(oc<0.7? 'Organic carbon low' : 'Organic carbon ok');
+    const rec = `Apply ${Math.max(0,150-n)} kg/ha N, ${Math.max(0,50-p)} kg/ha P₂O₅, ${Math.max(0,50-k)} kg/ha K₂O. Add 5t/ha FYM. Mulch to conserve moisture.`
+    openInfo('Soil Health Report', `<p>${status.join(' • ')}</p><p><b>Recommendation:</b> ${rec}</p>`);
+  }
+
+  // ---- Planner ----
+  function planSeason(){
+    const acre = +$('#landAcre').value, crop=$('#planCrop').value;
+    const margins = {Tomato: 65000, Onion: 45000, Tur: 38000, Wheat: 28000};
+    const gross = margins[crop]*acre; const risk = (crop==='Tomato'? 'High price volatility' : crop==='Onion'? 'Storage needed' : 'Moderate');
+    openInfo('Season Plan', `<p>Crop: <b>${crop}</b> • Area: <b>${acre} acre</b></p><div class='kpi'><b>${formatINR(gross)}</b><span>Projected gross margin</span></div><p>Risk: ${risk}</p>`);
+  }
+
+  // ---- Irrigation ----
+  function calcIrrigation(){
+    const eto=+$('#eto').value, kc=+$('#kc').value, acre=+$('#areaAcre').value, eff=+$('#eff').value/100;
+    const etc = eto*kc; // mm/day
+    const m3 = etc/1000 * (acre*4046.86); // cubic meters/day
+    const liters = m3*1000 / eff;
+    openInfo('Irrigation Requirement', `<div class='kpi'><b>${Math.round(liters).toLocaleString()} L/day</b><span>at field efficiency ${Math.round(eff*100)}%</span></div>`);
+  }
+
+  // ---- Profit ----
+  function calcProfit(){
+    const c=+$('#costIn').value + +$('#costLab').value;
+    const rev= +$('#yieldQ').value * +$('#priceQ').value;
+    const prof = rev - c;
+    const msg = prof>=0? `<span style='color:var(--good)'>Profit</span>` : `<span style='color:var(--bad)'>Loss</span>`;
+    openInfo('Cost & Profit', `<p>Total Cost: <b>${formatINR(c)}</b><br/>Revenue: <b>${formatINR(rev)}</b></p><div class='kpi'><b>${formatINR(prof)}</b><span>${msg}</span></div>`);
+  }
+
+  // ---- Solar ROI ----
+  function solarROI(){
+    const cost=+$('#solarCost').value, sub=+$('#solarSub').value/100, save=+$('#solarSave').value, om=+$('#solarOM').value;
+    const net = cost*(1-sub);
+    const annual = save*12 - om;
+    const payback = net/Math.max(annual,1);
+    openInfo('Solar ROI', `<p>Net Investment: <b>${formatINR(net)}</b></p><div class='kpi'><b>${payback.toFixed(1)} years</b><span>simple payback</span></div>`);
+  }
+
+  // ---- KisanBot ----
+  function kisanBot(){
+    const q = $('#botQ').value.trim(); if(!q) return;
+    const rules = 'This is an on-device demo. For critical decisions, consult local agronomists and official advisories.';
+    const ans = `Based on your query: <i>${q}</i><br/>• For paddy, split urea into 3 doses: basal, tillering, panicle initiation. Avoid application before heavy rain.\n<br/>• Keep field flooded 2–5 cm during tillering, intermittent later.\n<br/><small>${rules}</small>`;
+    openInfo('KisanBot Answer', `<p>${ans}</p>`);
+  }
+
+  // ---- Livestock ----
+  function addVax(){
+    const id=$('#cowId').value.trim(), vx=$('#vax').value.trim(); if(!id||!vx) return;
+    state.vax.unshift({id, vx, date: new Date().toISOString().slice(0,10)});
+    localStorage.setItem('km_vax', JSON.stringify(state.vax));
+    renderVax();
+  }
+  function renderVax(){
+    const box = $('#vaxList');
+    if(!state.vax.length){ box.textContent='No records yet.'; return; }
+    box.innerHTML = state.vax.map(v=>`<div class='mini'><strong>${v.id}</strong><small>${v.date} • ${v.vx}</small></div>`).join('');
+  }
+
+  // ---- Equipment ----
+  const equipment = [
+    {name:'Mahindra 575 Tractor', type:'Tractor', price:1200, km:4},
+    {name:'Power Tiller 7HP', type:'Tiller', price:800, km:7},
+    {name:'Self-Propelled Harvester', type:'Harvester', price:3500, km:12},
+    {name:'Drone Sprayer 10L', type:'Sprayer', price:1800, km:5},
+  ];
+  function listEquip(){
+    const f = $('#equipFilter').value;
+    const items = equipment.filter(e=> f==='All' || e.type===f);
+    $('#equipList').innerHTML = items.map(e=>`<div class='mini'><strong>${e.name}</strong><small>${e.type} • ${formatINR(e.price)}/hr • ${e.km} km away</small></div>`).join('');
+  }
+
+  // ---- Marketplace ----
+  function seedMarket(){
+    state.market = [
+      {item:'Tomato Grade-A', qty:'120 qtl', price:2100, contact:'+91-90000-11111'},
+      {item:'Tur (Arhar) Cleaned', qty:'80 qtl', price:6400, contact:'+91-98888-22222'},
+      {item:'Onion Red', qty:'300 qtl', price:1500, contact:'+91-97777-33333'},
+    ];
+    renderMarket();
+  }
+  function renderMarket(){
+    if(!state.market.length){ $('#marketList').innerHTML = '<span style="color:var(--muted)">No listings yet. Click “Load Samples”.</span>'; return; }
+    $('#marketList').innerHTML = state.market.map(r=>`<div class='mini'><strong>${r.item}</strong><small>${r.qty} • ${formatINR(r.price)}/qtl • ${r.contact}</small></div>`).join('');
+  }
+
+  function bookDrone(){
+    const svc=$('#droneSvc').value, area=+$('#droneArea').value;
+    const rate = {Spraying: 850, Seeding: 900, Mapping: 700}[svc];
+    const cost = rate*area;
+    openInfo('Drone Quote', `<p>Service: <b>${svc}</b> • Area: <b>${area} acre</b></p><div class='kpi'><b>${formatINR(cost)}</b><span>est. total</span></div>`);
+  }
+
+  function postJob(){
+    const role=$('#jobRole').value.trim(); const wage=+$('#jobWage').value;
+    if(!role || !wage) return;
+    const card = `<div class='mini'><strong>${role}</strong><small>${formatINR(wage)}/day • 6 days/week</small></div>`;
+    $('#jobBoard').insertAdjacentHTML('afterbegin', card);
+  }
+
+  function showBox(){
+    const crop=$('#boxCrop').value;
+    const kits = {
+      Tomato:['Hybrid seeds','Trichoderma','Sticky traps','Water-soluble NPK','Calcium spray'],
+      Chilli:['High-heat hybrid','Mulch film','Neem cake','Micronutrient mix'],
+      Paddy:['Certified seed','Bio-fertilizer (Azolla)','Herbicide','Zinc sulphate']
+    }[crop];
+    openInfo('Agri Box Contents', `<p><b>${crop}</b> kit includes:</p><ul>${kits.map(k=>`<li>${k}</li>`).join('')}</ul>`);
+  }
+
+  function clubSavings(){
+    const m=+$('#clubMembers').value, price=+$('#clubPrice').value;
+    const bulk = price*0.88; // 12% discount
+    const save = (price-bulk)*m;
+    openInfo('Buying Club Savings', `<div class='kpi'><b>${formatINR(save)}</b><span>total group savings (@12%)</span></div>`);
+  }
+
+  // ---- Community ----
+  function loanCheck(){
+    const inc=+$('#loanIncome').value, land=+$('#loanLand').value, score=+$('#loanScore').value;
+    const eligible = (inc>150000 && land>=1 && score>=650);
+    const limit = Math.min(land*200000, inc*0.5);
+    const insur = land>=1 ? 'PMFBY crop insurance likely' : 'Basic insurance only';
+    openInfo('Loan & Insurance', `<p>Status: <b style='color:${eligible?'#62e47b':'#ff708d'}'>${eligible? 'Eligible' : 'Not Eligible'}</b></p><p>Indicative limit: <b>${formatINR(limit)}</b></p><p>${insur}</p>`);
+  }
+  function postForum(){
+    const msg=$('#forumMsg').value.trim(); if(!msg) return;
+    const item = {msg, time:new Date().toLocaleString()};
+    state.forum.unshift(item); localStorage.setItem('km_forum', JSON.stringify(state.forum)); renderForum(); $('#forumMsg').value='';
+  }
+  function renderForum(){
+    const box=$('#forumList');
+    if(!state.forum.length){ box.innerHTML='<span style="color:var(--muted)">No posts yet.</span>'; return; }
+    box.innerHTML = state.forum.map(f=>`<div class='mini'><strong>${f.time}</strong><small>${f.msg}</small></div>`).join('');
+  }
+  function showFPO(){
+    openInfo('FPO Formation Checklist', `<ol>
+      <li>Gather 300+ members or as per state norms</li>
+      <li>Register under Companies Act as Producer Company</li>
+      <li>Create bylaws: membership, share capital, governance</li>
+      <li>Open bank account & PAN</li>
+      <li>Apply for grants/subsidies (SFAC, NABARD)</li>
+      <li>Set up procurement & marketing plan</li>
+    </ol>`);
+  }
+  function healthAdvice(){
+    const chem=$('#chem').value||'Chemical'; const hrs=+$('#hrs').value;
+    const risk = hrs>=4 ? 'High' : hrs>=2 ? 'Moderate' : 'Low';
+    openInfo('Agri Health Advice', `<p>Exposure: <b>${chem}</b> for <b>${hrs} hrs</b></p><p>Risk Level: <b>${risk}</b></p><ul><li>Use PPE: gloves, mask, goggles</li><li>Shower & change clothes after work</li><li>Keep MSDS accessible</li></ul>`);
+  }
+
+  // ---- Generic info modal ----
+  function openInfo(title, html){ $('#infoTitle').textContent=title; $('#infoBody').innerHTML=html; $('#infoDialog').showModal(); }
+
+  // ---- Init ----
+  function init(){
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderMandi(); renderMarket(); listEquip(); renderTimeline(); renderVax(); renderForum();
+    // Nav links
+    $$('header a.pill').forEach(a=>a.addEventListener('click', (e)=>{
+      const id = a.getAttribute('href').replace('#','');
+      if(id==='community'){ showSection('features'); activateTab('community'); }
+      else if(id==='features'){ showSection('features'); activateTab('fi'); }
+      else if(id==='diagnosis'){ showSection('diagnosis'); activateTab('diag'); }
+      else { scrollToId('home'); }
+      e.preventDefault();
+    }));
+    // Tab buttons
+    $$('#diagnosis .tabs .tab-btn').forEach(btn=>btn.addEventListener('click', ()=>activateTab(btn.dataset.tab)));
+    $$('#features .tabs .tab-btn').forEach(btn=>btn.addEventListener('click', ()=>activateTab(btn.dataset.tab)));
+  }
+  init();
+</script>
+</body>
+</html>
