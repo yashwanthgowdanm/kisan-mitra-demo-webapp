@@ -1,0 +1,13 @@
+{
+  "name": "Kisan Mitra",
+  "short_name": "Kisan Mitra",
+  "description": "AI crop doctor, live weather and mandi prices, and farmer community in 5 Indian languages.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EEF3EA",
+  "theme_color": "#1E6A3B",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

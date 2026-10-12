@@ -1,0 +1,17 @@
+name = "kisan-mitra-proxy"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+
+[vars]
+# Comma-separated origins allowed to call this proxy. Use your GitHub Pages origin (no trailing slash).
+ALLOWED_ORIGINS = "https://yashwanthgowdanm.github.io,http://localhost:8080"
+# First model is the default; requests for other models are switched to it.
+ALLOWED_MODELS = "claude-sonnet-5-5,claude-haiku-5-5"
+MAX_TOKENS = "2000"
+DAILY_LIMIT_PER_IP = "60"
+
+# Optional per-IP daily limit. Create with:  npx wrangler kv namespace create RATE
+# then uncomment and paste the id.
+# [[kv_namespaces]]
+# binding = "RATE"
+# id = "PASTE_KV_NAMESPACE_ID"
